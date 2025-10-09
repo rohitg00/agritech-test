@@ -1,0 +1,1202 @@
+{
+  "778XM-4434784:89924d1a-404c-4843-9cc6-2bf2b7e3f3fc": {
+    "id": "89924d1a-404c-4843-9cc6-2bf2b7e3f3fc",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "778XM-4434784",
+    "status": "completed",
+    "startTime": 1759754434785,
+    "endTime": 1759754435043,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759754435033,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "778XM-4434784",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759754435032",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759754435032,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759754435034,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759754435032",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "778XM-4434784:24ed5436-0751-4d75-b7ee-fbe1235cb046": {
+    "id": "24ed5436-0751-4d75-b7ee-fbe1235cb046",
+    "name": "QueryAgent",
+    "parentTraceId": "778XM-4434784",
+    "status": "failed",
+    "startTime": 1759754435035,
+    "endTime": 1759754435261,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759754435257,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "778XM-4434784",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759754435032",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759754435257,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759754435259,
+        "level": "error",
+        "message": "Failed to query agent",
+        "metadata": {
+          "traceId": "778XM-4434784",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759754435032",
+          "error": "OPENAI_API_KEY environment variable is not set",
+          "level": "error",
+          "time": 1759754435258,
+          "msg": "Failed to query agent"
+        }
+      }
+    ],
+    "error": {
+      "message": "OPENAI_API_KEY environment variable is not set",
+      "code": null,
+      "stack": "    at getOpenAIService (src/services/harvest-logbook/openai-service.ts:98:13)\n    at Function.queryWithAgent (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/index.ts:68:36)\n    at Object.handler (/Users/rohitghumare/agritech-proj/steps/harvest-logbook/query-agent.step.ts:40:55)"
+    }
+  },
+  "9697S-5288237:31d2c5c3-127d-4f60-b309-a8e96a5dcc41": {
+    "id": "31d2c5c3-127d-4f60-b309-a8e96a5dcc41",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "9697S-5288237",
+    "status": "completed",
+    "startTime": 1759755288238,
+    "endTime": 1759755288424,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755288416,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "9697S-5288237",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755288403",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755288403,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755288417,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755288403",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "9697S-5288237:79552287-b222-4ca5-bc7c-ab55578f6001": {
+    "id": "79552287-b222-4ca5-bc7c-ab55578f6001",
+    "name": "QueryAgent",
+    "parentTraceId": "9697S-5288237",
+    "status": "failed",
+    "startTime": 1759755288418,
+    "endTime": 1759755289821,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755288645,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "9697S-5288237",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755288403",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755288644,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755289818,
+        "level": "error",
+        "message": "Failed to query agent",
+        "metadata": {
+          "traceId": "9697S-5288237",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755288403",
+          "error": "fetch failed",
+          "level": "error",
+          "time": 1759755289817,
+          "msg": "Failed to query agent"
+        }
+      }
+    ],
+    "error": {
+      "message": "fetch failed",
+      "code": null,
+      "stack": "    at node:internal/deps/undici/undici:13510:13\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async PineconeService.query (src/services/harvest-logbook/pinecone-service.ts:67:22)\n    at async Function.queryWithAgent (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/index.ts:76:21)\n    at async Object.handler (/Users/rohitghumare/agritech-proj/steps/harvest-logbook/query-agent.step.ts:40:27)"
+    }
+  },
+  "C6WS6-5360306:eb2b1fb8-8720-4576-af36-b6086ffd0a6a": {
+    "id": "eb2b1fb8-8720-4576-af36-b6086ffd0a6a",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "C6WS6-5360306",
+    "status": "completed",
+    "startTime": 1759755360307,
+    "endTime": 1759755360476,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755360466,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "C6WS6-5360306",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755360465",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755360465,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755360468,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755360465",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "C6WS6-5360306:febf0a1b-d384-4264-9321-f1f90c3d3f76": {
+    "id": "febf0a1b-d384-4264-9321-f1f90c3d3f76",
+    "name": "QueryAgent",
+    "parentTraceId": "C6WS6-5360306",
+    "status": "failed",
+    "startTime": 1759755360468,
+    "endTime": 1759755361803,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755360696,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "C6WS6-5360306",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755360465",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755360696,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755361798,
+        "level": "error",
+        "message": "Failed to query agent",
+        "metadata": {
+          "traceId": "C6WS6-5360306",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755360465",
+          "error": "fetch failed",
+          "level": "error",
+          "time": 1759755361798,
+          "msg": "Failed to query agent"
+        }
+      }
+    ],
+    "error": {
+      "message": "fetch failed",
+      "code": null,
+      "stack": "    at node:internal/deps/undici/undici:13510:13\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async PineconeService.query (src/services/harvest-logbook/pinecone-service.ts:67:22)\n    at async Function.queryWithAgent (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/index.ts:76:21)\n    at async Object.handler (/Users/rohitghumare/agritech-proj/steps/harvest-logbook/query-agent.step.ts:40:27)"
+    }
+  },
+  "HA7RQ-5400840:7e484c31-ceb8-4da4-ba28-6d621c28de25": {
+    "id": "7e484c31-ceb8-4da4-ba28-6d621c28de25",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "HA7RQ-5400840",
+    "status": "completed",
+    "startTime": 1759755400840,
+    "endTime": 1759755401024,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755401014,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "HA7RQ-5400840",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755401013",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755401013,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755401014,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755401013",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "HA7RQ-5400840:fb40e6e3-33fa-407d-964c-30f1ec6a89d7": {
+    "id": "fb40e6e3-33fa-407d-964c-30f1ec6a89d7",
+    "name": "QueryAgent",
+    "parentTraceId": "HA7RQ-5400840",
+    "status": "failed",
+    "startTime": 1759755401015,
+    "endTime": 1759755402164,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755401240,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "HA7RQ-5400840",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755401013",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755401240,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755402161,
+        "level": "error",
+        "message": "Failed to query agent",
+        "metadata": {
+          "traceId": "HA7RQ-5400840",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755401013",
+          "error": "fetch failed",
+          "level": "error",
+          "time": 1759755402160,
+          "msg": "Failed to query agent"
+        }
+      }
+    ],
+    "error": {
+      "message": "fetch failed",
+      "code": null,
+      "stack": "    at node:internal/deps/undici/undici:13510:13\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async PineconeService.query (src/services/harvest-logbook/pinecone-service.ts:78:22)\n    at async Function.queryWithAgent (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/index.ts:76:21)\n    at async Object.handler (/Users/rohitghumare/agritech-proj/steps/harvest-logbook/query-agent.step.ts:40:27)"
+    }
+  },
+  "7HS5D-5448872:aa055ac0-c56b-4ec8-a425-5aca5c26d9fe": {
+    "id": "aa055ac0-c56b-4ec8-a425-5aca5c26d9fe",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "7HS5D-5448872",
+    "status": "completed",
+    "startTime": 1759755448873,
+    "endTime": 1759755449059,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755449049,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "7HS5D-5448872",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755449049",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755449049,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755449051,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755449049",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "7HS5D-5448872:b0adc8be-acf2-49df-9177-fca6caab1533": {
+    "id": "b0adc8be-acf2-49df-9177-fca6caab1533",
+    "name": "QueryAgent",
+    "parentTraceId": "7HS5D-5448872",
+    "status": "failed",
+    "startTime": 1759755449051,
+    "endTime": 1759755450985,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755449285,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "7HS5D-5448872",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755449049",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755449285,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755450983,
+        "level": "error",
+        "message": "Failed to query agent",
+        "metadata": {
+          "traceId": "7HS5D-5448872",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755449049",
+          "error": "Failed to connect to Pinecone at https://harvest_logbook-us-east-1.svc.pinecone.io. Please verify: 1) PINECONE_INDEX_HOST is correct, 2) API key is valid, 3) Network connectivity. Get your index host from: Pinecone Console → Your Index → Connect → Host. Original error: fetch failed",
+          "level": "error",
+          "time": 1759755450983,
+          "msg": "Failed to query agent"
+        }
+      }
+    ],
+    "error": {
+      "message": "Failed to connect to Pinecone at https://harvest_logbook-us-east-1.svc.pinecone.io. Please verify: 1) PINECONE_INDEX_HOST is correct, 2) API key is valid, 3) Network connectivity. Get your index host from: Pinecone Console → Your Index → Connect → Host. Original error: fetch failed",
+      "code": null,
+      "stack": "    at PineconeService.query (src/services/harvest-logbook/pinecone-service.ts:114:15)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Function.queryWithAgent (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/index.ts:76:21)\n    at async Object.handler (/Users/rohitghumare/agritech-proj/steps/harvest-logbook/query-agent.step.ts:40:27)"
+    }
+  },
+  "GUN8D-5522311:c8b55416-dea2-486a-8e2a-b704acaf5beb": {
+    "id": "c8b55416-dea2-486a-8e2a-b704acaf5beb",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "GUN8D-5522311",
+    "status": "completed",
+    "startTime": 1759755522311,
+    "endTime": 1759755522492,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755522481,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "GUN8D-5522311",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755522480",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755522480,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755522482,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755522480",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "GUN8D-5522311:8df795f3-e414-418f-b53e-3819bbdf48f0": {
+    "id": "8df795f3-e414-418f-b53e-3819bbdf48f0",
+    "name": "QueryAgent",
+    "parentTraceId": "GUN8D-5522311",
+    "status": "failed",
+    "startTime": 1759755522482,
+    "endTime": 1759755524663,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755522706,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "GUN8D-5522311",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755522480",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755522705,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755524661,
+        "level": "error",
+        "message": "Failed to query agent",
+        "metadata": {
+          "traceId": "GUN8D-5522311",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755522480",
+          "error": "HuggingFace API error: 403 - {\"error\":\"This authentication method does not have sufficient permissions to call Inference Providers on behalf of user rohitg00\"}",
+          "level": "error",
+          "time": 1759755524660,
+          "msg": "Failed to query agent"
+        }
+      }
+    ],
+    "error": {
+      "message": "HuggingFace API error: 403 - {\"error\":\"This authentication method does not have sufficient permissions to call Inference Providers on behalf of user rohitg00\"}",
+      "code": null,
+      "stack": "    at HuggingFaceService.chatCompletion (src/services/harvest-logbook/huggingface-service.ts:58:13)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async Function.queryWithAgent (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/index.ts:87:22)\n    at async Object.handler (/Users/rohitghumare/agritech-proj/steps/harvest-logbook/query-agent.step.ts:40:27)"
+    }
+  },
+  "EJBHU-5666770:fd1f072a-15a0-4b0e-b737-be1b082d2b98": {
+    "id": "fd1f072a-15a0-4b0e-b737-be1b082d2b98",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "EJBHU-5666770",
+    "status": "completed",
+    "startTime": 1759755666771,
+    "endTime": 1759755666949,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755666938,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "EJBHU-5666770",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755666937",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755666937,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755666940,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755666937",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "EJBHU-5666770:325f2009-0991-4cea-a2c1-5d4096374f5c": {
+    "id": "325f2009-0991-4cea-a2c1-5d4096374f5c",
+    "name": "QueryAgent",
+    "parentTraceId": "EJBHU-5666770",
+    "status": "completed",
+    "startTime": 1759755666940,
+    "endTime": 1759755671264,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755667175,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "EJBHU-5666770",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755666937",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755667174,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1759755671250,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1759755666937",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755671254,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "EJBHU-5666770",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755666937",
+          "responseLength": 217,
+          "sourcesCount": 0,
+          "level": "info",
+          "time": 1759755671252,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755671254,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755666937",
+          "query": "What crops had pest damage this week?",
+          "response": "I'm sorry, but the system does not currently track or provide information on pest damage to specific crops. It is recommended to keep a record of pest damage incidents manually to monitor and address them effectively.",
+          "sources": []
+        }
+      }
+    ]
+  },
+  "EJBHU-5666770:4a031da4-03d8-4b29-a530-86b1ec6438bd": {
+    "id": "4a031da4-03d8-4b29-a530-86b1ec6438bd",
+    "name": "LogToSheets",
+    "parentTraceId": "EJBHU-5666770",
+    "status": "completed",
+    "startTime": 1759755671254,
+    "endTime": 1759755671504,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755671498,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "EJBHU-5666770",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1759755666937",
+          "queryLength": 37,
+          "responseLength": 217,
+          "level": "info",
+          "time": 1759755671497,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755671500,
+        "level": "error",
+        "message": "Failed to log to Google Sheets",
+        "metadata": {
+          "traceId": "EJBHU-5666770",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1759755666937",
+          "error": "Access token not set. Call setAccessToken first.",
+          "level": "error",
+          "time": 1759755671499,
+          "msg": "Failed to log to Google Sheets"
+        }
+      }
+    ]
+  },
+  "T1M5K-5916497:8d4bc51a-9bae-4a1b-870a-234fc74a981e": {
+    "id": "8d4bc51a-9bae-4a1b-870a-234fc74a981e",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "T1M5K-5916497",
+    "status": "completed",
+    "startTime": 1759755916497,
+    "endTime": 1759755916676,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755916660,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "T1M5K-5916497",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759755916660",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759755916660,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755916662,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755916660",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "T1M5K-5916497:2ef2481a-e278-407d-b5b4-c08500bacda5": {
+    "id": "2ef2481a-e278-407d-b5b4-c08500bacda5",
+    "name": "QueryAgent",
+    "parentTraceId": "T1M5K-5916497",
+    "status": "completed",
+    "startTime": 1759755916662,
+    "endTime": 1759755921444,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755916917,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "T1M5K-5916497",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755916660",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759755916916,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1759755921422,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1759755916660",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755921429,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "T1M5K-5916497",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759755916660",
+          "responseLength": 206,
+          "sourcesCount": 0,
+          "level": "info",
+          "time": 1759755921425,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759755921429,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1759755916660",
+          "query": "What crops had pest damage this week?",
+          "response": "I do not have information on specific pest damage for crops in the recent harvests. It would be advisable to consult with a crop specialist or agronomist for detailed pest damage reports for specific crops.",
+          "sources": []
+        }
+      }
+    ]
+  },
+  "T1M5K-5916497:640a7426-0292-43e7-a784-97ddda9abe82": {
+    "id": "640a7426-0292-43e7-a784-97ddda9abe82",
+    "name": "LogToSheets",
+    "parentTraceId": "T1M5K-5916497",
+    "status": "completed",
+    "startTime": 1759755921429,
+    "endTime": 1759755921700,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759755921692,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "T1M5K-5916497",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1759755916660",
+          "queryLength": 37,
+          "responseLength": 206,
+          "level": "info",
+          "time": 1759755921691,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759755921694,
+        "level": "info",
+        "message": "Successfully logged to Google Sheets",
+        "metadata": {
+          "traceId": "T1M5K-5916497",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1759755916660",
+          "level": "info",
+          "time": 1759755921694,
+          "msg": "Successfully logged to Google Sheets"
+        }
+      }
+    ]
+  },
+  "G35HS-0091578:7894871a-2e11-42f3-8f84-feccb25db0ac": {
+    "id": "7894871a-2e11-42f3-8f84-feccb25db0ac",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "G35HS-0091578",
+    "status": "completed",
+    "startTime": 1759760091578,
+    "endTime": 1759760091780,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759760091765,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "G35HS-0091578",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1759760091750",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1759760091750,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759760091767,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1759760091750",
+          "query": "What crops had pest damage this week?",
+          "conversationHistory": [
+            {
+              "role": "user",
+              "content": "Show me recent harvests"
+            },
+            {
+              "role": "assistant",
+              "content": "Here are the recent harvests from fields A and B..."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "G35HS-0091578:7523f6c0-8c86-441f-81f1-9b5ed1995741": {
+    "id": "7523f6c0-8c86-441f-81f1-9b5ed1995741",
+    "name": "QueryAgent",
+    "parentTraceId": "G35HS-0091578",
+    "status": "completed",
+    "startTime": 1759760091768,
+    "endTime": 1759760096361,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759760092035,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "G35HS-0091578",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759760091750",
+          "query": "What crops had pest damage this week?",
+          "level": "info",
+          "time": 1759760092035,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1759760096345,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1759760091750",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759760096349,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "G35HS-0091578",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1759760091750",
+          "responseLength": 363,
+          "sourcesCount": 0,
+          "level": "info",
+          "time": 1759760096348,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1759760096349,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1759760091750",
+          "query": "What crops had pest damage this week?",
+          "response": "I do not have access to specific information on pest damage for this week. However, it is important to monitor crops regularly for pest infestations and take appropriate measures to mitigate damage. If you suspect pest damage, it is recommended to consult with a local agricultural extension office or a crop specialist for guidance on pest management strategies.",
+          "sources": []
+        }
+      }
+    ]
+  },
+  "G35HS-0091578:c6d7144a-bb0e-4226-97bc-e77bc1dab9b6": {
+    "id": "c6d7144a-bb0e-4226-97bc-e77bc1dab9b6",
+    "name": "LogToSheets",
+    "parentTraceId": "G35HS-0091578",
+    "status": "completed",
+    "startTime": 1759760096349,
+    "endTime": 1759760096627,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759760096616,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "G35HS-0091578",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1759760091750",
+          "queryLength": 37,
+          "responseLength": 363,
+          "level": "info",
+          "time": 1759760096615,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1759760096619,
+        "level": "info",
+        "message": "Successfully logged to Google Sheets",
+        "metadata": {
+          "traceId": "G35HS-0091578",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1759760091750",
+          "level": "info",
+          "time": 1759760096619,
+          "msg": "Successfully logged to Google Sheets"
+        }
+      }
+    ]
+  },
+  "YH4XS-5534900:475af5df-e0f8-48bc-a82f-e0a46ff476fa": {
+    "id": "475af5df-e0f8-48bc-a82f-e0a46ff476fa",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "YH4XS-5534900",
+    "status": "completed",
+    "startTime": 1759845534900,
+    "endTime": 1759845535221,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1759845535212,
+        "level": "error",
+        "message": "Authorization middleware error",
+        "metadata": {
+          "traceId": "YH4XS-5534900",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "error": "Authorization check failed",
+          "stack": "Error: Authorization check failed\n    at AuthZedService.checkPermission (/Users/rohitghumare/agritech-proj/src/services/harvest-logbook/authzed-service.ts:85:13)\n    at /Users/rohitghumare/agritech-proj/middlewares/authz.middleware.ts:75:43\n    at /Users/rohitghumare/agritech-proj/node_modules/@motiadev/core/dist/src/node/middleware-compose.js:7:92\n    at errorHandlerMiddleware (/Users/rohitghumare/agritech-proj/middlewares/error-handler.middleware.ts:13:18)\n    at /Users/rohitghumare/agritech-proj/node_modules/@motiadev/core/dist/src/node/middleware-compose.js:7:92\n    at /Users/rohitghumare/agritech-proj/node_modules/@motiadev/core/dist/src/node/middleware-compose.js:8:16\n    at runTypescriptModule (/Users/rohitghumare/agritech-proj/node_modules/@motiadev/core/dist/src/node/node-runner.js:58:30)\n    at Object.<anonymous> (/Users/rohitghumare/agritech-proj/node_modules/@motiadev/core/dist/src/node/node-runner.js:84:1)\n    at Module._compile (node:internal/modules/cjs/loader:1529:14)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1613:10)",
+          "level": "error",
+          "time": 1759845535210,
+          "msg": "Authorization middleware error"
+        }
+      }
+    ]
+  }
+}
