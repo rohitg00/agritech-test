@@ -1,12 +1,12 @@
 /**
- * AuthZed Authorization Middleware
+ * SpiceDB Authorization Middleware
  * Enforces permission checks on API endpoints
  */
 
 import { ApiMiddleware } from 'motia';
-import { getAuthZedService } from '../src/services/harvest-logbook/authzed-service';
+import { getSpiceDBService } from '../src/services/harvest-logbook/spicedb-service';
 
-export interface AuthZedMiddlewareConfig {
+export interface SpiceDBMiddlewareConfig {
   /**
    * Type of resource being accessed
    */
@@ -33,7 +33,7 @@ export interface AuthZedMiddlewareConfig {
 /**
  * Create authorization middleware for API steps
  */
-export function createAuthZMiddleware(config: AuthZedMiddlewareConfig): ApiMiddleware {
+export function createSpiceDBMiddleware(config: SpiceDBMiddlewareConfig): ApiMiddleware {
   return async (req, ctx, next) => {
     const { logger } = ctx;
     
@@ -70,9 +70,9 @@ export function createAuthZMiddleware(config: AuthZedMiddlewareConfig): ApiMiddl
         };
       }
       
-      // Check permission with AuthZed
-      const authzed = getAuthZedService();
-      const hasPermission = await authzed.checkPermission({
+      // Check permission with SpiceDB
+      const spicedb = getSpiceDBService();
+      const hasPermission = await spicedb.checkPermission({
         userId,
         resourceType: config.resourceType,
         resourceId,
@@ -134,7 +134,7 @@ export function createAuthZMiddleware(config: AuthZedMiddlewareConfig): ApiMiddl
 /**
  * Middleware for harvest entry write operations
  */
-export const harvestEntryEditMiddleware = createAuthZMiddleware({
+export const harvestEntryEditMiddleware = createSpiceDBMiddleware({
   resourceType: 'farm',
   permission: 'edit'
 });
@@ -142,7 +142,7 @@ export const harvestEntryEditMiddleware = createAuthZMiddleware({
 /**
  * Middleware for query operations
  */
-export const harvestQueryMiddleware = createAuthZMiddleware({
+export const harvestQueryMiddleware = createSpiceDBMiddleware({
   resourceType: 'farm',
   permission: 'query'
 });
@@ -150,7 +150,7 @@ export const harvestQueryMiddleware = createAuthZMiddleware({
 /**
  * Middleware for view operations
  */
-export const harvestViewMiddleware = createAuthZMiddleware({
+export const harvestViewMiddleware = createSpiceDBMiddleware({
   resourceType: 'farm',
   permission: 'view'
 });
@@ -158,7 +158,11 @@ export const harvestViewMiddleware = createAuthZMiddleware({
 /**
  * Middleware for admin operations
  */
-export const harvestManageMiddleware = createAuthZMiddleware({
+export const harvestManageMiddleware = createSpiceDBMiddleware({
   resourceType: 'farm',
   permission: 'manage'
 });
+
+// Legacy exports for backwards compatibility
+export const createAuthZMiddleware = createSpiceDBMiddleware;
+export type AuthZedMiddlewareConfig = SpiceDBMiddlewareConfig;

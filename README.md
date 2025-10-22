@@ -1,42 +1,145 @@
-# agritech-test
+# Harvest Logbook - RAG + Authorization Demo
 
-A production-ready RAG (Retrieval Augmented Generation) system for managing harvest logs with AI-powered querying, converted from n8n to Motia.
+A hands-on demonstration of building a production-ready **RAG (Retrieval Augmented Generation)** system with **fine-grained authorization** using the Motia framework and SpiceDB.
+
+## 🎯 What This Demo Teaches
+
+This project demonstrates how to:
+
+1. **Build a RAG Pipeline with Motia** - Learn how to implement a complete retrieval-augmented generation system using Motia's event-driven architecture
+2. **Add Fine-Grained Authorization** - Implement role-based access control using SpiceDB for multi-tenant data access
+3. **Structure Production Services** - Organize services, steps, and middleware in a scalable, maintainable way
+4. **Handle Real-World Scenarios** - Support multiple LLM providers, logging backends, and configuration options
+
+### The Use Case
+
+A **harvest logbook system** where farmers can:
+- Store harvest data with AI-powered embeddings for semantic search
+- Query their historical data using natural language
+- Access only the data they have permission to see
 
 ## 🏗️ System Architecture
 
 ```
-POST /harvest_logbook → Process Embeddings → Pinecone Vector Store
-                     ↓
-                     Query Agent (RAG) → Log Results
+┌─────────────────────────────────────────────────────────────┐
+│  POST /harvest_logbook                                      │
+│  (Store harvest data + optional query)                      │
+└─────────┬───────────────────────────────────────────────────┘
+          │
+          ├─→ Authorization Middleware (SpiceDB)
+          │   - Check user has 'edit' permission on farm
+          │
+          ├─→ ReceiveHarvestData Step (API)
+          │   - Validate input
+          │   - Emit events
+          │
+          ├─→ ProcessEmbeddings Step (Event)
+          │   - Split text into chunks (400 chars, 40 overlap)
+          │   - Generate embeddings (OpenAI)
+          │   - Store vectors (Pinecone)
+          │
+          └─→ QueryAgent Step (Event) [if query provided]
+              - Retrieve similar content (Pinecone)
+              - Generate response (OpenAI/HuggingFace)
+              - Emit logging event
+              │
+              └─→ LogToSheets Step (Event)
+                  - Log query & response (CSV/Sheets)
 ```
 
-### Components
+### Authorization Flow
 
-**API Steps:**
-- `POST /harvest_logbook` - Store harvest data (with optional query)
-- `POST /harvest_logbook/query` - Query knowledge base only
+```
+User Request (x-user-id header)
+    ↓
+Authorization Middleware
+    ↓
+SpiceDB Permission Check
+- Does user have 'edit' on farm_1?
+- Does user have 'query' on farm_1?
+    ↓
+✅ Allowed → Process Request
+❌ Denied → 403 Forbidden
+```
 
-**Event Steps:**
-- `ProcessEmbeddings` - Split text, generate embeddings, store in Pinecone
-- `QueryAgent` - RAG query with context retrieval + LLM generation
-- `LogToSheets` - Log queries and responses
+## 📚 Learning Path
 
-**Services:**
-- OpenAI - Embeddings (text-embedding-ada-002)
-- Pinecone - Vector storage and similarity search
-- OpenAI Chat / HuggingFace - LLM for response generation
-- CSV Logger / Google Sheets - Audit logging
+Follow these steps to understand the codebase:
 
-## 🚀 Quick Setup
+### Step 1: Understand the Authorization Schema
+📄 **File:** `src/services/harvest-logbook/spicedb.schema`
+
+This defines the permission model:
+- Organizations contain farms
+- Farms have owners, editors, and viewers
+- Each role has different permissions (view, edit, query, manage)
+
+### Step 2: Study the Authorization Service
+📄 **File:** `src/services/harvest-logbook/spicedb-service.ts`
+
+Learn how to:
+- Initialize SpiceDB client
+- Check permissions
+- Create/delete relationships
+
+### Step 3: Explore the Authorization Middleware
+📄 **File:** `middlewares/authz.middleware.ts`
+
+See how requests are protected:
+- Extract user ID from headers
+- Determine required permission based on endpoint
+- Check permission in SpiceDB
+- Allow or deny access
+
+### Step 4: Understand the RAG Pipeline Services
+📂 **Directory:** `src/services/harvest-logbook/`
+
+Study each service:
+- `text-splitter.ts` - Chunk text for embeddings
+- `openai-service.ts` - Generate embeddings
+- `pinecone-service.ts` - Store and query vectors
+- `openai-chat-service.ts` - Generate AI responses
+- `csv-logger.ts` - Log queries (alternative: `sheets-service.ts`)
+- `index.ts` - **Main orchestration** - ties everything together
+
+### Step 5: Examine the Motia Steps
+📂 **Directory:** `steps/harvest-logbook/`
+
+Understand the flow:
+1. `receive-harvest-data.step.ts` - API endpoint (with auth)
+2. `process-embeddings.step.ts` - Event handler for embeddings
+3. `query-agent.step.ts` - Event handler for RAG queries
+4. `log-to-sheets.step.ts` - Event handler for logging
+5. `query-only.step.ts` - Separate query-only endpoint
+
+Each `.tsx` file is the UI component for Motia Workbench visualization.
+
+### Step 6: Try the Authorization Scripts
+📂 **Directory:** `scripts/`
+
+Run these to see authorization in action:
+1. `setup-spicedb-schema.ts` - Initialize SpiceDB schema
+2. `verify-spicedb-schema.ts` - Verify schema is correct
+3. `create-sample-permissions.ts` - Create users with different roles
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- Docker (for local SpiceDB)
+- OpenAI API key
+- Pinecone account
 
 ### 1. Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 2. Configure Environment
+### 2. Setup Environment Variables
 
-Create `.env` file:
+Create a `.env` file:
 
 ```bash
 # OpenAI (Required for embeddings and chat)
@@ -46,9 +149,9 @@ OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxx
 PINECONE_API_KEY=pcsk_xxxxxxxxxxxxx
 PINECONE_INDEX_HOST=your-index-abc123.svc.us-east-1.pinecone.io
 
-# AuthZed/SpiceDB (Required for authorization)
-AUTHZED_ENDPOINT=grpc.authzed.com:443
-AUTHZED_TOKEN=tc_your_authzed_token_xxxxxxxxxxxxx
+# SpiceDB/SpiceDB (Required for authorization)
+SPICEDB_ENDPOINT=localhost:50051
+SPICEDB_TOKEN=sometoken
 
 # LLM Configuration (Choose one)
 USE_OPENAI_CHAT=true              # Recommended: Use OpenAI for chat
@@ -56,69 +159,71 @@ USE_OPENAI_CHAT=true              # Recommended: Use OpenAI for chat
 # HUGGINGFACE_API_KEY=hf_xxxxxxx # Required if USE_OPENAI_CHAT=false
 
 # Logging Configuration (Choose one)
-USE_CSV_LOGGER=true               # Recommended for testing: Local CSV
+USE_CSV_LOGGER=true               # Recommended for demos: Local CSV
 # USE_CSV_LOGGER=false            # Production: Google Sheets
 # GOOGLE_SHEETS_ID=xxxxxxxx       # Required if USE_CSV_LOGGER=false
 # GOOGLE_SHEETS_ACCESS_TOKEN=xxx  # Required if USE_CSV_LOGGER=false
 ```
 
-### 3. Get Pinecone Index Host
+### 3. Create Pinecone Index
 
 1. Go to [Pinecone Console](https://app.pinecone.io/)
-2. Click your index → **Connect** tab
-3. Copy the **Host** value (e.g., `your-index-abc123.svc.us-east-1.pinecone.io`)
-4. Paste into `PINECONE_INDEX_HOST` in `.env`
+2. Create a new index with:
+   - **Name:** `harvest-logbook` (or your preference)
+   - **Dimensions:** `1536` (for OpenAI embeddings)
+   - **Metric:** `cosine`
+3. Click your index → **Connect** tab → Copy the **Host**
+4. Add to `.env`: `PINECONE_INDEX_HOST=your-host-here`
 
-### 4. Create Pinecone Index
+### 4. Start SpiceDB Locally
 
-- **Name**: `harvest_logbook` (or your preference)
-- **Dimensions**: `1536` (for OpenAI embeddings)
-- **Metric**: `cosine`
-
-### 5. Setup AuthZed/SpiceDB
-
-#### Option A: Use AuthZed Cloud (Recommended for development)
-1. Sign up at [AuthZed Dashboard](https://app.authzed.com/)
-2. Create a new permission system
-3. Get your API token (starts with `tc_`)
-4. Add to `.env`: `AUTHZED_TOKEN=tc_your_token_here`
-
-#### Option B: Use SpiceDB Locally
 ```bash
-# Using Docker
 docker run -d \
   --name spicedb \
   -p 50051:50051 \
-  authzed/spicedb serve \
-  --grpc-preshared-key "local_development_key"
-
-# Add to .env
-AUTHZED_ENDPOINT=localhost:50051
-AUTHZED_TOKEN=local_development_key
+  spicedb/spicedb serve \
+  --grpc-preshared-key "sometoken"
 ```
 
-### 6. Initialize Authorization Schema
+### 5. Initialize Authorization
+
 ```bash
 # Write the authorization schema to SpiceDB
-npx ts-node scripts/setup-authzed-schema.ts
+npm run spicedb:setup
 
-# Verify the schema was written correctly
-npx ts-node scripts/verify-authzed-schema.ts
+# Verify the schema
+npm run spicedb:verify
 
-# Create sample permissions for testing
-npx ts-node scripts/create-sample-permissions.ts
+# Create sample users and permissions
+npm run spicedb:sample
 ```
 
-### 7. Start Server
+This creates:
+- **user_alice** - Farm owner (can view, edit, query, manage)
+- **org_1** - Sample organization
+- **farm_1** - Sample farm
+
+To create additional users with different roles:
+
+```bash
+# Create a viewer (read-only)
+npm run spicedb:sample -- --user user_bob --role viewer
+
+# Create an editor
+npm run spicedb:sample -- --user user_charlie --role editor
+```
+
+### 6. Start the Server
+
 ```bash
 npm run dev
 ```
 
-## 📝 Usage
+The server starts at `http://localhost:3000`
 
-**Note:** All requests require authorization headers. Use the `x-user-id` header to identify the user making the request.
+## 📝 Try It Out
 
-### Store Harvest Data
+### Test 1: Store Harvest Data (as Alice - Owner)
 
 ```bash
 curl -X POST http://localhost:3000/harvest_logbook \
@@ -135,24 +240,13 @@ curl -X POST http://localhost:3000/harvest_logbook \
   }'
 ```
 
-### Store Data + Query
+**What happens:**
+1. Authorization middleware checks if `user_alice` has `edit` permission on `farm_1` ✅
+2. Data is chunked and embedded
+3. Vectors stored in Pinecone
+4. Response returned
 
-```bash
-curl -X POST http://localhost:3000/harvest_logbook \
-  -H "Content-Type: application/json" \
-  -H "x-user-id: user_alice" \
-  -d '{
-    "content": "Harvested 300kg of corn from field B.",
-    "farmId": "farm_1",
-    "query": "What is the total harvest weight today?",
-    "metadata": {
-      "field": "B",
-      "crop": "corn"
-    }
-  }'
-```
-
-### Query Only
+### Test 2: Query the Data (as Alice)
 
 ```bash
 curl -X POST http://localhost:3000/harvest_logbook/query \
@@ -160,24 +254,148 @@ curl -X POST http://localhost:3000/harvest_logbook/query \
   -H "x-user-id: user_alice" \
   -d '{
     "farmId": "farm_1",
-    "query": "Which crops had pest damage this week?"
+    "query": "What crops did we harvest recently?"
   }'
 ```
 
-### View Logs
+**What happens:**
+1. Authorization middleware checks if `user_alice` has `query` permission on `farm_1` ✅
+2. Query is embedded
+3. Similar vectors retrieved from Pinecone
+4. AI generates response using context
+5. Result is logged to CSV
 
-**CSV Logging** (default):
+### Test 3: Try Access as Bob (Viewer - Read-Only)
+
+First, create Bob:
+```bash
+npm run spicedb:sample -- --user user_bob --role viewer
+```
+
+Bob can query:
+```bash
+curl -X POST http://localhost:3000/harvest_logbook/query \
+  -H "Content-Type: application/json" \
+  -H "x-user-id: user_bob" \
+  -d '{
+    "farmId": "farm_1",
+    "query": "What crops did we harvest?"
+  }'
+```
+✅ **Success** - Bob has `query` permission
+
+Bob cannot edit:
+```bash
+curl -X POST http://localhost:3000/harvest_logbook \
+  -H "Content-Type: application/json" \
+  -H "x-user-id: user_bob" \
+  -d '{
+    "content": "New harvest data",
+    "farmId": "farm_1"
+  }'
+```
+❌ **403 Forbidden** - Bob lacks `edit` permission
+
+### Test 4: View Logs
+
 ```bash
 cat logs/harvest_logbook.csv
 ```
 
-**Google Sheets**: Check your spreadsheet
+You'll see all queries and responses logged.
 
-## 🔄 Configuration Alternatives
+## 🗂️ Project Structure
 
-### LLM Provider: OpenAI Chat vs HuggingFace
+```
+agritech-test/
+├── src/services/harvest-logbook/
+│   ├── spicedb.schema              # SpiceDB permission model
+│   ├── spicedb-service.ts          # Authorization service
+│   ├── types.ts                    # TypeScript type definitions
+│   ├── text-splitter.ts            # Text chunking (400/40)
+│   ├── openai-service.ts           # Embeddings service
+│   ├── openai-chat-service.ts      # OpenAI chat (default)
+│   ├── huggingface-service.ts      # HuggingFace chat (alternative)
+│   ├── pinecone-service.ts         # Vector storage
+│   ├── csv-logger.ts               # CSV logging (default)
+│   ├── sheets-service.ts           # Google Sheets (alternative)
+│   └── index.ts                    # Main orchestration service
+│
+├── steps/harvest-logbook/
+│   ├── receive-harvest-data.step.ts    # API: POST /harvest_logbook
+│   ├── receive-harvest-data.step.tsx   # UI component
+│   ├── process-embeddings.step.ts      # Event: Embedding processing
+│   ├── process-embeddings.step.tsx     # UI component
+│   ├── query-agent.step.ts             # Event: RAG query
+│   ├── query-agent.step.tsx            # UI component
+│   ├── query-only.step.ts              # API: POST /harvest_logbook/query
+│   ├── query-only.step.tsx             # UI component
+│   ├── log-to-sheets.step.ts           # Event: Logging
+│   └── log-to-sheets.step.tsx          # UI component
+│
+├── middlewares/
+│   ├── authz.middleware.ts         # Authorization middleware
+│   └── error-handler.middleware.ts # Error handling
+│
+├── scripts/
+│   ├── setup-spicedb-schema.ts     # Initialize SpiceDB schema
+│   ├── verify-spicedb-schema.ts    # Verify schema
+│   └── create-sample-permissions.ts # Create users & permissions
+│
+├── .env                            # Environment variables
+├── package.json                    # Dependencies
+└── README.md                       # This file
+```
 
-**Default: OpenAI Chat** (Recommended)
+## 🔐 Authorization Model
+
+### Resource Hierarchy
+
+```
+Organization (org_1)
+  ├── admin: user_alice
+  ├── member: user_david
+  │
+  └── Farm (farm_1)
+      ├── owner: user_alice      (view, edit, query, manage)
+      ├── editor: user_charlie   (view, edit, query)
+      └── viewer: user_bob        (view, query)
+```
+
+### Permissions Explained
+
+| Permission | Description | Who Has It |
+|------------|-------------|------------|
+| `view` | View harvest data | Viewer, Editor, Owner, Org Member |
+| `edit` | Create new harvest entries | Editor, Owner, Org Member |
+| `query` | Execute RAG queries | Viewer, Editor, Owner, Org Member |
+| `manage` | Administrative operations | Owner, Org Admin |
+
+### How Authorization Works
+
+1. **User sends request** with `x-user-id` header
+2. **Middleware extracts** user ID and farm ID from request
+3. **SpiceDB checks** if relationship exists (e.g., user_bob → viewer → farm_1)
+4. **Permission computed** based on schema rules
+5. **Request allowed or denied** before reaching handler
+
+## 🎨 Motia Workbench
+
+Start the server (`npm run dev`) and open the Motia Workbench in your browser to see:
+
+- 📥 **Receive Harvest Data** - API step with request/response
+- 🧬 **Process Embeddings** - Event step showing chunking
+- 🤖 **Query Agent** - RAG pipeline with source citations
+- 📊 **Log to Sheets** - Logging step with destination
+- 🔍 **Query Only** - Separate query endpoint
+
+Each step has a custom UI component (`.tsx` file) for visualization.
+
+## 🔄 Configuration Options
+
+### Switch LLM Provider
+
+**Default: OpenAI (Recommended)**
 ```bash
 USE_OPENAI_CHAT=true
 OPENAI_API_KEY=sk-proj-xxxxx
@@ -186,282 +404,142 @@ OPENAI_API_KEY=sk-proj-xxxxx
 **Alternative: HuggingFace**
 ```bash
 USE_OPENAI_CHAT=false
-HUGGINGFACE_API_KEY=hf_xxxxx  # Requires inference API permissions
+HUGGINGFACE_API_KEY=hf_xxxxx
 ```
 
-**Code Location:**
-```typescript
-// src/services/harvest-logbook/index.ts (line 72)
-const useOpenAIChat = process.env.USE_OPENAI_CHAT === 'true' || !process.env.HUGGINGFACE_API_KEY;
+**Code Location:** `src/services/harvest-logbook/index.ts:77`
 
-if (useOpenAIChat) {
-  const openaiChat = getOpenAIChatService();
-  response = await openaiChat.generateWithContext(...);
-} else {
-  const huggingface = getHuggingFaceService();
-  response = await huggingface.generateWithContext(...);
-}
-```
+### Switch Logging Backend
 
-### Logging: CSV vs Google Sheets
-
-**Default: CSV Logger** (Testing)
+**Default: CSV Logger (Recommended for demos)**
 ```bash
 USE_CSV_LOGGER=true
 # Logs saved to: logs/harvest_logbook.csv
 ```
 
-**Alternative: Google Sheets** (Production)
+**Alternative: Google Sheets (Production)**
 ```bash
 USE_CSV_LOGGER=false
 GOOGLE_SHEETS_ID=your_spreadsheet_id
 GOOGLE_SHEETS_ACCESS_TOKEN=your_oauth_token
 ```
 
-**Code Location:**
-```typescript
-// src/services/harvest-logbook/index.ts (line 134)
-const useCSV = process.env.USE_CSV_LOGGER === 'true' || !process.env.GOOGLE_SHEETS_ID;
-
-if (useCSV) {
-  const csvLogger = getCSVLogger();
-  await csvLogger.logEntry(entry);
-} else {
-  const sheets = getGoogleSheetsService();
-  await sheets.logEntry(entry);
-}
-```
-
-## 🔧 n8n to Motia Conversion
-
-### Original n8n Workflow
-
-```
-Webhook → Splitter → Embeddings → Insert (Pinecone)
-   ↓                                     ↓
-Memory → Agent ←─── Query (Pinecone) ←──┘
-   ↓         ↓
-   └────→ Sheet
-```
-
-### Motia Implementation
-
-| n8n Node | Motia Component | File |
-|----------|----------------|------|
-| Webhook | API Step: `ReceiveHarvestData` | `steps/harvest-logbook/receive-harvest-data.step.ts` |
-| Splitter | Utility: `splitText()` | `src/services/harvest-logbook/text-splitter.ts` |
-| Embeddings | Service: `OpenAIService` | `src/services/harvest-logbook/openai-service.ts` |
-| Insert | Service: `PineconeService.upsert()` | `src/services/harvest-logbook/pinecone-service.ts` |
-| Query | Service: `PineconeService.query()` | `src/services/harvest-logbook/pinecone-service.ts` |
-| Tool | Built into `QueryAgent` | `steps/harvest-logbook/query-agent.step.ts` |
-| Memory | Conversation history in state | Built-in state management |
-| Chat | Service: `OpenAIChatService` or `HuggingFaceService` | `src/services/harvest-logbook/` |
-| Agent | Event Step: `QueryAgent` | `steps/harvest-logbook/query-agent.step.ts` |
-| Sheet | Service: `CSVLogger` or `GoogleSheetsService` | `src/services/harvest-logbook/` |
-
-### Configuration Changes from n8n
-
-**Text Chunking:**
-- n8n: `chunkSize: 400, chunkOverlap: 40`
-- Motia: Same - configured in `text-splitter.ts`
-
-**Vector Database:**
-- n8n: Pinecone with hardcoded index name
-- Motia: Configurable via `PINECONE_INDEX_HOST` environment variable
-
-**LLM:**
-- n8n: HuggingFace only
-- Motia: **OpenAI Chat (default)** or HuggingFace via `USE_OPENAI_CHAT` flag
-
-**Logging:**
-- n8n: Google Sheets only
-- Motia: **CSV Logger (default)** or Google Sheets via `USE_CSV_LOGGER` flag
-
-## 🛠️ Project Structure
-
-```
-agritech-proj/
-├── src/services/harvest-logbook/
-│   ├── types.ts                    # Type definitions
-│   ├── text-splitter.ts           # Text chunking (400/40)
-│   ├── openai-service.ts          # Embeddings
-│   ├── openai-chat-service.ts     # OpenAI chat (alternative)
-│   ├── huggingface-service.ts     # HuggingFace chat (alternative)
-│   ├── pinecone-service.ts        # Vector storage
-│   ├── csv-logger.ts              # CSV logging (alternative)
-│   ├── sheets-service.ts          # Google Sheets (alternative)
-│   └── index.ts                   # Main orchestration
-├── steps/harvest-logbook/
-│   ├── receive-harvest-data.step.ts    # API: POST /harvest_logbook
-│   ├── receive-harvest-data.step.tsx   # UI component
-│   ├── process-embeddings.step.ts      # Event: Embedding processing
-│   ├── process-embeddings.step.tsx     # UI component
-│   ├── query-agent.step.ts             # Event: AI agent query
-│   ├── query-agent.step.tsx            # UI component
-│   ├── query-only.step.ts              # API: POST /harvest_logbook/query
-│   ├── query-only.step.tsx             # UI component
-│   ├── log-to-sheets.step.ts           # Event: Logging
-│   └── log-to-sheets.step.tsx          # UI component
-└── README.md                       # This file
-```
-
-## 🎨 Motia Workbench
-
-Each step includes custom UI components for beautiful visualization:
-- 🌾 Harvest Entry - Webhook with metadata display
-- 🧬 Process Embeddings - Shows chunking parameters
-- 🤖 AI Agent - RAG pipeline with source indicators
-- 📊 Log Results - CSV or Sheets destination
-- 🔍 Query Only - Separate query endpoint
-
-## 📊 State Management
-
-The system uses Motia's built-in state management:
-
-- `harvest-entries` - Temporary storage for incoming data
-- `harvest-vectors` - Maps entry IDs to vector IDs in Pinecone
-- `agent-responses` - Caches AI responses
-
-## 🔐 Security & Authorization
-
-### AuthZed/SpiceDB Integration
-
-The system uses AuthZed (SpiceDB) for fine-grained authorization:
-
-**Resource Hierarchy:**
-```
-Organization
-  ├── Farms
-  │   └── Harvest Entries
-  └── Users (with roles)
-```
-
-**Roles & Permissions:**
-- **Organization Admin**: Full control over organization, farms, and data
-- **Organization Member**: Can view, edit, and query all organization data
-- **Farm Owner**: Full control over specific farm and its data
-- **Farm Editor**: Can add harvest entries and query farm data
-- **Farm Viewer**: Can view harvest data and query results
-
-**Permission Model:**
-```typescript
-// Users must have appropriate permissions:
-- 'view': View harvest data
-- 'edit': Create new harvest entries
-- 'query': Execute RAG queries
-- 'manage': Administrative operations
-```
-
-**Authorization Flow:**
-1. User sends request with `x-user-id` header
-2. Middleware checks user's permission on the specified farm
-3. Request proceeds only if user has required permission
-4. Authorization context available in handlers
-
-### Security Features
-
-- Fine-grained access control via SpiceDB
-- All API keys in environment variables
-- Input validation via Zod schemas
-- Error handling with retry logic
-- No sensitive data in logs
-- User context tracking in all operations
-
-## 🚀 Production Considerations
-
-### Switch to Google Sheets
-```bash
-USE_CSV_LOGGER=false
-GOOGLE_SHEETS_ID=your_spreadsheet_id
-GOOGLE_SHEETS_ACCESS_TOKEN=your_oauth_token
-```
-
-### Use HuggingFace (if preferred)
-```bash
-USE_OPENAI_CHAT=false
-HUGGINGFACE_API_KEY=hf_your_token_with_inference_permissions
-```
-
-### Configure Production AuthZed
-Update `.env` with production AuthZed endpoint and token
-
-### Enable Rate Limiting
-Add rate limiting middleware to prevent abuse
-
-### Monitor Performance
-- Check Pinecone dashboard for vector stats
-- Monitor OpenAI API usage
-- Track response times in logs
+**Code Location:** `src/services/harvest-logbook/index.ts:135`
 
 ## 🐛 Troubleshooting
 
-### "fetch failed" - Pinecone Connection
-**Issue**: `PINECONE_INDEX_HOST` not set or incorrect
+### Authorization Fails
 
-**Solution**:
-1. Get host from Pinecone Console → Your Index → Connect tab
-2. Add to `.env`: `PINECONE_INDEX_HOST=your-index-abc123.svc.us-east-1.pinecone.io`
-3. Restart server
+**Problem:** Getting 403 Forbidden errors
 
-### "403" - HuggingFace Permissions
-**Issue**: API key lacks inference permissions
+**Solution:**
+1. Verify SpiceDB is running: `docker ps | grep spicedb`
+2. Check schema is initialized: `npm run spicedb:verify`
+3. Verify user has permissions: Check SpiceDB logs or re-run `npm run spicedb:sample`
 
-**Solution**: Switch to OpenAI Chat (recommended)
-```bash
-USE_OPENAI_CHAT=true
-```
+### Pinecone Connection Error
 
-Or fix HuggingFace token permissions at https://huggingface.co/settings/tokens
+**Problem:** `fetch failed` when storing embeddings
 
-### CSV Logs Not Created
-**Issue**: Directory not initialized
-
-**Solution**: System creates `logs/` automatically. If issues persist:
-```bash
-mkdir logs
-```
+**Solution:**
+1. Verify `PINECONE_INDEX_HOST` is set correctly
+2. Get host from Pinecone Console → Your Index → Connect tab
+3. Format: `your-index-abc123.svc.region.pinecone.io` (no `https://`)
 
 ### Empty Query Results
-**Issue**: No data stored in Pinecone yet
 
-**Solution**: First store some data before querying
+**Problem:** AI returns "I don't have information about that"
 
-## 📚 Key Features
+**Solution:**
+1. First store some data: `POST /harvest_logbook`
+2. Wait a few seconds for embedding processing
+3. Then query: `POST /harvest_logbook/query`
 
-✅ **Type Safety** - Full TypeScript with Zod validation
-✅ **Scalability** - Event-driven, horizontally scalable
-✅ **Flexibility** - Swap LLM providers and logging backends via config
-✅ **RAG Pipeline** - Vector similarity search + context-aware generation
-✅ **State Management** - Built-in coordination between steps
-✅ **Error Handling** - Automatic retries and detailed error messages
-✅ **Beautiful UI** - Custom Workbench components for each step
+### SpiceDB Not Starting
 
-## 🤝 Development
+**Problem:** Docker container fails to start
 
-### Generate Types
+**Solution:**
 ```bash
+# Remove old container
+docker rm -f spicedb
+
+# Start fresh
+docker run -d \
+  --name spicedb \
+  -p 50051:50051 \
+  spicedb/spicedb serve \
+  --grpc-preshared-key "sometoken"
+```
+
+## 📖 Key Concepts Demonstrated
+
+### 1. Event-Driven Architecture (Motia)
+- API steps handle HTTP requests
+- Event steps process background tasks
+- Steps communicate via events
+- Built-in state management
+
+### 2. Fine-Grained Authorization (SpiceDB)
+- Schema defines permission model
+- Relationships stored in SpiceDB
+- Real-time permission checks
+- Supports complex hierarchies
+
+### 3. RAG Pipeline
+- Text chunking for better retrieval
+- Vector embeddings for semantic search
+- Context injection into LLM prompts
+- Source citation in responses
+
+### 4. Production Patterns
+- Singleton service instances
+- Environment-based configuration
+- Middleware for cross-cutting concerns
+- Error handling and validation
+
+## 🤝 Development Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Generate TypeScript types
 npm run generate-types
-```
 
-### Build
-```bash
+# Build for production
 npm run build
-```
 
-### Clean
-```bash
+# Clean all generated files
 npm run clean
+
+# Authorization commands
+npm run spicedb:setup    # Initialize schema
+npm run spicedb:verify   # Verify schema
+npm run spicedb:sample   # Create sample users
 ```
 
-## 📖 Resources
+## 📚 Additional Resources
 
 - [Motia Documentation](https://motia.dev/docs)
+- [SpiceDB Documentation](https://docs.spicedb.com/)
+- [SpiceDB Playground](https://play.spicedb.com/)
 - [OpenAI API](https://platform.openai.com/docs)
 - [Pinecone Docs](https://docs.pinecone.io/)
-- [HuggingFace Inference](https://huggingface.co/docs/api-inference)
-- [AuthZed Documentation](https://docs.authzed.com/)
-- [SpiceDB](https://github.com/authzed/spicedb)
+
+## 🎓 Learning Exercises
+
+Try these to deepen your understanding:
+
+1. **Add a new role** - Create a "manager" role with custom permissions
+2. **Add a new resource** - Support "fields" within farms with separate permissions
+3. **Implement caching** - Cache permission checks for performance
+4. **Add audit logs** - Log all authorization decisions
+5. **Multi-tenancy** - Support multiple organizations with isolated data
 
 ---
 
-**Built with ❤️ using Motia** - Converted from n8n to production-ready scalable backend
+**Built with ❤️ using Motia and SpiceDB** - A teaching demo for RAG + Authorization
