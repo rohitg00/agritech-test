@@ -7,9 +7,9 @@
     "generate-types": "motia generate-types",
     "build": "motia build",
     "clean": "rm -rf dist node_modules python_modules .motia .mermaid",
-    "authz:setup": "tsx scripts/setup-authzed-schema.ts",
-    "authz:verify": "tsx scripts/verify-authzed-schema.ts",
-    "authz:sample": "tsx scripts/create-sample-permissions.ts"
+    "spicedb:setup": "tsx scripts/setup-spicedb-schema.ts",
+    "spicedb:verify": "tsx scripts/verify-spicedb-schema.ts",
+    "spicedb:sample": "tsx scripts/create-sample-permissions.ts"
   },
   "keywords": [
     "motia"

@@ -1198,5 +1198,2021 @@
         }
       }
     ]
+  },
+  "MF9DN-7583463:425319ad-d3cc-4730-aaa8-9534bee5ecae": {
+    "id": "425319ad-d3cc-4730-aaa8-9534bee5ecae",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "MF9DN-7583463",
+    "status": "completed",
+    "startTime": 1761147583464,
+    "endTime": 1761147583909,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761147583901,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "MF9DN-7583463",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "edit",
+          "level": "info",
+          "time": 1761147583898,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761147583902,
+        "level": "info",
+        "message": "Received harvest log data",
+        "metadata": {
+          "traceId": "MF9DN-7583463",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "entryId": "harvest-1761147583898",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "contentLength": 85,
+          "hasQuery": false,
+          "level": "info",
+          "time": 1761147583898,
+          "msg": "Received harvest log data"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761147583902,
+        "operation": "set",
+        "data": {
+          "traceId": "harvest-entries",
+          "key": "harvest-1761147583898",
+          "value": true
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761147583904,
+        "topic": "process-embeddings",
+        "success": true,
+        "data": {
+          "entryId": "harvest-1761147583898",
+          "content": "Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed.",
+          "metadata": {
+            "field": "A",
+            "crop": "tomatoes",
+            "weight_kg": 500,
+            "farmId": "farm_1",
+            "userId": "user_alice"
+          }
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761147583905,
+        "level": "info",
+        "message": "Harvest log data queued for processing",
+        "metadata": {
+          "traceId": "MF9DN-7583463",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "entryId": "harvest-1761147583898",
+          "farmId": "farm_1",
+          "level": "info",
+          "time": 1761147583904,
+          "msg": "Harvest log data queued for processing"
+        }
+      }
+    ]
+  },
+  "MF9DN-7583463:fca256c3-6328-4ff8-b081-fe9c07ac12e8": {
+    "id": "fca256c3-6328-4ff8-b081-fe9c07ac12e8",
+    "name": "ProcessEmbeddings",
+    "parentTraceId": "MF9DN-7583463",
+    "status": "failed",
+    "startTime": 1761147583904,
+    "endTime": 1761147584409,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "ProcessEmbeddings"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761147584135,
+        "level": "info",
+        "message": "Processing embeddings",
+        "metadata": {
+          "traceId": "MF9DN-7583463",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ProcessEmbeddings",
+          "entryId": "harvest-1761147583898",
+          "contentLength": 85,
+          "level": "info",
+          "time": 1761147584135,
+          "msg": "Processing embeddings"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761147584406,
+        "level": "error",
+        "message": "Failed to process embeddings",
+        "metadata": {
+          "traceId": "MF9DN-7583463",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ProcessEmbeddings",
+          "entryId": "harvest-1761147583898",
+          "error": "OpenAI API error: 401 - {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: sk-proj-************************************************************************************************************************iLP$. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }\n}\n",
+          "level": "error",
+          "time": 1761147584406,
+          "msg": "Failed to process embeddings"
+        }
+      }
+    ],
+    "error": {
+      "message": "OpenAI API error: 401 - {\n    \"error\": {\n        \"message\": \"Incorrect API key provided: sk-proj-************************************************************************************************************************iLP$. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }\n}\n",
+      "code": null,
+      "stack": "    \"error\": {\n        \"message\": \"Incorrect API key provided: sk-proj-************************************************************************************************************************iLP$. You can find your API key at https://platform.openai.com/account/api-keys.\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"invalid_api_key\"\n    }\n}\n\n    at OpenAIService.createEmbeddings (src/services/harvest-logbook/openai-service.ts:66:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async OpenAIService.embedChunks (/Users/sohan/code-samples/motia/agritech-test/src/services/harvest-logbook/openai-service.ts:82:24)\n    at async Function.storeEntry (/Users/sohan/code-samples/motia/agritech-test/src/services/harvest-logbook/index.ts:42:28)\n    at async Object.handler (/Users/sohan/code-samples/motia/agritech-test/steps/harvest-logbook/process-embeddings.step.ts:36:23)"
+    }
+  },
+  "TG1VH-7965513:523fcaf8-26e8-4aeb-97b3-e26dffecdb43": {
+    "id": "523fcaf8-26e8-4aeb-97b3-e26dffecdb43",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "TG1VH-7965513",
+    "status": "completed",
+    "startTime": 1761147965513,
+    "endTime": 1761147965843,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761147965835,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "TG1VH-7965513",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "edit",
+          "level": "info",
+          "time": 1761147965811,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761147965835,
+        "level": "info",
+        "message": "Received harvest log data",
+        "metadata": {
+          "traceId": "TG1VH-7965513",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "entryId": "harvest-1761147965811",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "contentLength": 85,
+          "hasQuery": false,
+          "level": "info",
+          "time": 1761147965811,
+          "msg": "Received harvest log data"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761147965835,
+        "operation": "set",
+        "data": {
+          "traceId": "harvest-entries",
+          "key": "harvest-1761147965811",
+          "value": true
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761147965836,
+        "topic": "process-embeddings",
+        "success": true,
+        "data": {
+          "entryId": "harvest-1761147965811",
+          "content": "Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed.",
+          "metadata": {
+            "field": "A",
+            "crop": "tomatoes",
+            "weight_kg": 500,
+            "farmId": "farm_1",
+            "userId": "user_alice"
+          }
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761147965838,
+        "level": "info",
+        "message": "Harvest log data queued for processing",
+        "metadata": {
+          "traceId": "TG1VH-7965513",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "entryId": "harvest-1761147965811",
+          "farmId": "farm_1",
+          "level": "info",
+          "time": 1761147965837,
+          "msg": "Harvest log data queued for processing"
+        }
+      }
+    ]
+  },
+  "TG1VH-7965513:eec65055-b461-4b82-bc30-9c4049b3b10e": {
+    "id": "eec65055-b461-4b82-bc30-9c4049b3b10e",
+    "name": "ProcessEmbeddings",
+    "parentTraceId": "TG1VH-7965513",
+    "status": "completed",
+    "startTime": 1761147965836,
+    "endTime": 1761147968346,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "ProcessEmbeddings"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761147966079,
+        "level": "info",
+        "message": "Processing embeddings",
+        "metadata": {
+          "traceId": "TG1VH-7965513",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ProcessEmbeddings",
+          "entryId": "harvest-1761147965811",
+          "contentLength": 85,
+          "level": "info",
+          "time": 1761147966079,
+          "msg": "Processing embeddings"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761147968323,
+        "operation": "set",
+        "data": {
+          "traceId": "harvest-vectors",
+          "key": "harvest-1761147965811",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761147968326,
+        "level": "info",
+        "message": "Successfully processed and stored embeddings",
+        "metadata": {
+          "traceId": "TG1VH-7965513",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ProcessEmbeddings",
+          "entryId": "harvest-1761147965811",
+          "vectorCount": 1,
+          "level": "info",
+          "time": 1761147968324,
+          "msg": "Successfully processed and stored embeddings"
+        }
+      }
+    ]
+  },
+  "QWEVV-8040321:c59b38b7-b743-4770-8ed9-8cfdd7556fbb": {
+    "id": "c59b38b7-b743-4770-8ed9-8cfdd7556fbb",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "QWEVV-8040321",
+    "status": "completed",
+    "startTime": 1761148040321,
+    "endTime": 1761148040566,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761148040559,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "QWEVV-8040321",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "edit",
+          "level": "info",
+          "time": 1761148040559,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761148040560,
+        "level": "info",
+        "message": "Received harvest log data",
+        "metadata": {
+          "traceId": "QWEVV-8040321",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "entryId": "harvest-1761148040559",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "contentLength": 101,
+          "hasQuery": false,
+          "level": "info",
+          "time": 1761148040559,
+          "msg": "Received harvest log data"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761148040560,
+        "operation": "set",
+        "data": {
+          "traceId": "harvest-entries",
+          "key": "harvest-1761148040559",
+          "value": true
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761148040561,
+        "topic": "process-embeddings",
+        "success": true,
+        "data": {
+          "entryId": "harvest-1761148040559",
+          "content": "Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed.",
+          "metadata": {
+            "field": "B",
+            "crop": "potatoes",
+            "weight_kg": 200,
+            "farmId": "farm_1",
+            "userId": "user_alice"
+          }
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761148040563,
+        "level": "info",
+        "message": "Harvest log data queued for processing",
+        "metadata": {
+          "traceId": "QWEVV-8040321",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "entryId": "harvest-1761148040559",
+          "farmId": "farm_1",
+          "level": "info",
+          "time": 1761148040562,
+          "msg": "Harvest log data queued for processing"
+        }
+      }
+    ]
+  },
+  "QWEVV-8040321:89941316-6493-45fe-be44-4254df44824a": {
+    "id": "89941316-6493-45fe-be44-4254df44824a",
+    "name": "ProcessEmbeddings",
+    "parentTraceId": "QWEVV-8040321",
+    "status": "completed",
+    "startTime": 1761148040561,
+    "endTime": 1761148043967,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "ProcessEmbeddings"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761148040809,
+        "level": "info",
+        "message": "Processing embeddings",
+        "metadata": {
+          "traceId": "QWEVV-8040321",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ProcessEmbeddings",
+          "entryId": "harvest-1761148040559",
+          "contentLength": 101,
+          "level": "info",
+          "time": 1761148040809,
+          "msg": "Processing embeddings"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761148043946,
+        "operation": "set",
+        "data": {
+          "traceId": "harvest-vectors",
+          "key": "harvest-1761148040559",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761148043950,
+        "level": "info",
+        "message": "Successfully processed and stored embeddings",
+        "metadata": {
+          "traceId": "QWEVV-8040321",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ProcessEmbeddings",
+          "entryId": "harvest-1761148040559",
+          "vectorCount": 1,
+          "level": "info",
+          "time": 1761148043948,
+          "msg": "Successfully processed and stored embeddings"
+        }
+      }
+    ]
+  },
+  "4TRQC-8111873:7a05a5e3-3f84-4f06-96be-23d0cba12072": {
+    "id": "7a05a5e3-3f84-4f06-96be-23d0cba12072",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "4TRQC-8111873",
+    "status": "completed",
+    "startTime": 1761148111873,
+    "endTime": 1761148112116,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761148112111,
+        "level": "warn",
+        "message": "Authorization failed: Permission denied",
+        "metadata": {
+          "traceId": "4TRQC-8111873",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "userId": "user_bob",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "edit",
+          "level": "warn",
+          "time": 1761148112111,
+          "msg": "Authorization failed: Permission denied"
+        }
+      }
+    ]
+  },
+  "C2MK9-8123652:3d453732-5784-4f71-97d8-7666621d81fb": {
+    "id": "3d453732-5784-4f71-97d8-7666621d81fb",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "C2MK9-8123652",
+    "status": "completed",
+    "startTime": 1761148123652,
+    "endTime": 1761148123885,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761148123878,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "C2MK9-8123652",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761148123878,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761148123879,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "C2MK9-8123652",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761148123878",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "queryLength": 38,
+          "level": "info",
+          "time": 1761148123878,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761148123879,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761148123878",
+          "query": "Which crops had pest damage this week?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "C2MK9-8123652:095664de-adbd-4f3c-a9ee-d89b0f5c763a": {
+    "id": "095664de-adbd-4f3c-a9ee-d89b0f5c763a",
+    "name": "QueryAgent",
+    "parentTraceId": "C2MK9-8123652",
+    "status": "completed",
+    "startTime": 1761148123879,
+    "endTime": 1761148127032,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761148124125,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "C2MK9-8123652",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761148123878",
+          "query": "Which crops had pest damage this week?",
+          "level": "info",
+          "time": 1761148124125,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761148126997,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761148123878",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761148127004,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "C2MK9-8123652",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761148123878",
+          "responseLength": 131,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761148126999,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761148127005,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761148123878",
+          "query": "Which crops had pest damage this week?",
+          "response": "This week, pest damage was observed in the potatoes harvested from field B. The tomatoes from field A did not have any pest damage.",
+          "sources": [
+            "[0.86] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed...",
+            "[0.85] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed...."
+          ]
+        }
+      }
+    ]
+  },
+  "C2MK9-8123652:4265e21e-8087-4d53-9177-c77175b1972c": {
+    "id": "4265e21e-8087-4d53-9177-c77175b1972c",
+    "name": "LogToSheets",
+    "parentTraceId": "C2MK9-8123652",
+    "status": "completed",
+    "startTime": 1761148127005,
+    "endTime": 1761148127271,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761148127264,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "C2MK9-8123652",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761148123878",
+          "queryLength": 38,
+          "responseLength": 131,
+          "level": "info",
+          "time": 1761148127263,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761148127266,
+        "level": "info",
+        "message": "Successfully logged to Google Sheets",
+        "metadata": {
+          "traceId": "C2MK9-8123652",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761148123878",
+          "level": "info",
+          "time": 1761148127266,
+          "msg": "Successfully logged to Google Sheets"
+        }
+      }
+    ]
+  },
+  "WGJTS-9232791:322df698-d9bd-4ad0-a9d9-e40cea82c5f1": {
+    "id": "322df698-d9bd-4ad0-a9d9-e40cea82c5f1",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "WGJTS-9232791",
+    "status": "completed",
+    "startTime": 1761149232791,
+    "endTime": 1761149233071,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149233064,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "WGJTS-9232791",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761149233054,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149233065,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "WGJTS-9232791",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761149233054",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "queryLength": 25,
+          "level": "info",
+          "time": 1761149233054,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761149233065,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761149233054",
+          "query": "How many kgs of tomatoes?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "WGJTS-9232791:b6a4a0bd-411a-4007-a266-fb0a08107417": {
+    "id": "b6a4a0bd-411a-4007-a266-fb0a08107417",
+    "name": "QueryAgent",
+    "parentTraceId": "WGJTS-9232791",
+    "status": "completed",
+    "startTime": 1761149233065,
+    "endTime": 1761149235542,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149233303,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "WGJTS-9232791",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761149233054",
+          "query": "How many kgs of tomatoes?",
+          "level": "info",
+          "time": 1761149233302,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761149235519,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761149233054",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149235523,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "WGJTS-9232791",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761149233054",
+          "responseLength": 46,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761149235523,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761149235524,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761149233054",
+          "query": "How many kgs of tomatoes?",
+          "response": "500kg of tomatoes were harvested from field A.",
+          "sources": [
+            "[0.85] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed....",
+            "[0.80] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed..."
+          ]
+        }
+      }
+    ]
+  },
+  "WGJTS-9232791:8f98818f-a451-48e0-a58c-0b6ddaf5521c": {
+    "id": "8f98818f-a451-48e0-a58c-0b6ddaf5521c",
+    "name": "LogToSheets",
+    "parentTraceId": "WGJTS-9232791",
+    "status": "completed",
+    "startTime": 1761149235524,
+    "endTime": 1761149235804,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149235796,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "WGJTS-9232791",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761149233054",
+          "queryLength": 25,
+          "responseLength": 46,
+          "level": "info",
+          "time": 1761149235796,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149235798,
+        "level": "info",
+        "message": "Successfully logged to Google Sheets",
+        "metadata": {
+          "traceId": "WGJTS-9232791",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761149233054",
+          "level": "info",
+          "time": 1761149235798,
+          "msg": "Successfully logged to Google Sheets"
+        }
+      }
+    ]
+  },
+  "YFD29-9377716:7f90a689-5296-422a-97cb-91ef2916a197": {
+    "id": "7f90a689-5296-422a-97cb-91ef2916a197",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "YFD29-9377716",
+    "status": "completed",
+    "startTime": 1761149377716,
+    "endTime": 1761149377971,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149377964,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "YFD29-9377716",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761149377964,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149377965,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "YFD29-9377716",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761149377964",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "queryLength": 35,
+          "level": "info",
+          "time": 1761149377964,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761149377965,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761149377964",
+          "query": "How many kgs of tomatoes harvested?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "YFD29-9377716:e750981b-d680-4adc-b38d-6b44b6e86078": {
+    "id": "e750981b-d680-4adc-b38d-6b44b6e86078",
+    "name": "QueryAgent",
+    "parentTraceId": "YFD29-9377716",
+    "status": "completed",
+    "startTime": 1761149377965,
+    "endTime": 1761149384323,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149378207,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "YFD29-9377716",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761149377964",
+          "query": "How many kgs of tomatoes harvested?",
+          "level": "info",
+          "time": 1761149378206,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761149384305,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761149377964",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149384307,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "YFD29-9377716",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761149377964",
+          "responseLength": 33,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761149384306,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761149384307,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761149377964",
+          "query": "How many kgs of tomatoes harvested?",
+          "response": "500kg of tomatoes were harvested.",
+          "sources": [
+            "[0.90] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed....",
+            "[0.86] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed..."
+          ]
+        }
+      }
+    ]
+  },
+  "YFD29-9377716:83a31e58-631f-4776-b9ee-88f56fb80d89": {
+    "id": "83a31e58-631f-4776-b9ee-88f56fb80d89",
+    "name": "LogToSheets",
+    "parentTraceId": "YFD29-9377716",
+    "status": "completed",
+    "startTime": 1761149384308,
+    "endTime": 1761149384583,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149384575,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "YFD29-9377716",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761149377964",
+          "queryLength": 35,
+          "responseLength": 33,
+          "level": "info",
+          "time": 1761149384574,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149384577,
+        "level": "info",
+        "message": "Successfully logged to Google Sheets",
+        "metadata": {
+          "traceId": "YFD29-9377716",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761149377964",
+          "level": "info",
+          "time": 1761149384577,
+          "msg": "Successfully logged to Google Sheets"
+        }
+      }
+    ]
+  },
+  "NU5M5-9433725:d53846de-d279-474c-89d0-36f44404dc72": {
+    "id": "d53846de-d279-474c-89d0-36f44404dc72",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "NU5M5-9433725",
+    "status": "completed",
+    "startTime": 1761149433725,
+    "endTime": 1761149433988,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149433979,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "NU5M5-9433725",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_bob",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761149433979,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149433980,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "NU5M5-9433725",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761149433979",
+          "farmId": "farm_1",
+          "userId": "user_bob",
+          "queryLength": 35,
+          "level": "info",
+          "time": 1761149433979,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761149433980,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761149433979",
+          "query": "How many kgs of tomatoes harvested?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "NU5M5-9433725:87a0e9fa-c3b5-45d6-b381-d6450984e6c9": {
+    "id": "87a0e9fa-c3b5-45d6-b381-d6450984e6c9",
+    "name": "QueryAgent",
+    "parentTraceId": "NU5M5-9433725",
+    "status": "completed",
+    "startTime": 1761149433980,
+    "endTime": 1761149435975,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149434303,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "NU5M5-9433725",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761149433979",
+          "query": "How many kgs of tomatoes harvested?",
+          "level": "info",
+          "time": 1761149434303,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761149435955,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761149433979",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149435960,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "NU5M5-9433725",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761149433979",
+          "responseLength": 33,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761149435958,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761149435960,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761149433979",
+          "query": "How many kgs of tomatoes harvested?",
+          "response": "500kg of tomatoes were harvested.",
+          "sources": [
+            "[0.90] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed....",
+            "[0.86] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed..."
+          ]
+        }
+      }
+    ]
+  },
+  "NU5M5-9433725:fd76d177-6893-4e02-9e18-92dab851bbc8": {
+    "id": "fd76d177-6893-4e02-9e18-92dab851bbc8",
+    "name": "LogToSheets",
+    "parentTraceId": "NU5M5-9433725",
+    "status": "completed",
+    "startTime": 1761149435960,
+    "endTime": 1761149436245,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149436233,
+        "level": "info",
+        "message": "Logging to Google Sheets",
+        "metadata": {
+          "traceId": "NU5M5-9433725",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761149433979",
+          "queryLength": 35,
+          "responseLength": 33,
+          "level": "info",
+          "time": 1761149436233,
+          "msg": "Logging to Google Sheets"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761149436237,
+        "level": "info",
+        "message": "Successfully logged to Google Sheets",
+        "metadata": {
+          "traceId": "NU5M5-9433725",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761149433979",
+          "level": "info",
+          "time": 1761149436236,
+          "msg": "Successfully logged to Google Sheets"
+        }
+      }
+    ]
+  },
+  "6CX4R-9472925:a62a635c-33d2-47d2-80ae-5a07f9ab7515": {
+    "id": "a62a635c-33d2-47d2-80ae-5a07f9ab7515",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "6CX4R-9472925",
+    "status": "completed",
+    "startTime": 1761149472925,
+    "endTime": 1761149473151,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149473147,
+        "level": "warn",
+        "message": "Authorization failed: Permission denied",
+        "metadata": {
+          "traceId": "6CX4R-9472925",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_dav",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "warn",
+          "time": 1761149473147,
+          "msg": "Authorization failed: Permission denied"
+        }
+      }
+    ]
+  },
+  "S4CUZ-9565536:1808cb32-2d0a-4284-80c5-299e8dfa3c3b": {
+    "id": "1808cb32-2d0a-4284-80c5-299e8dfa3c3b",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "S4CUZ-9565536",
+    "status": "completed",
+    "startTime": 1761149565536,
+    "endTime": 1761149565773,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761149565769,
+        "level": "warn",
+        "message": "Authorization failed: Permission denied",
+        "metadata": {
+          "traceId": "S4CUZ-9565536",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "userId": "user_bob",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "edit",
+          "level": "warn",
+          "time": 1761149565769,
+          "msg": "Authorization failed: Permission denied"
+        }
+      }
+    ]
+  },
+  "MSD5K-0947233:d7b2a0db-b2d8-46d4-a75d-7db9229b9646": {
+    "id": "d7b2a0db-b2d8-46d4-a75d-7db9229b9646",
+    "name": "ReceiveHarvestData",
+    "parentTraceId": "MSD5K-0947233",
+    "status": "completed",
+    "startTime": 1761150947234,
+    "endTime": 1761150947506,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "ReceiveHarvestData"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761150947499,
+        "level": "warn",
+        "message": "Authorization failed: Permission denied",
+        "metadata": {
+          "traceId": "MSD5K-0947233",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "ReceiveHarvestData",
+          "userId": "user_bob",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "edit",
+          "level": "warn",
+          "time": 1761150947489,
+          "msg": "Authorization failed: Permission denied"
+        }
+      }
+    ]
+  },
+  "HYDMW-0988330:70503569-4ba4-4e80-990b-9494ed80e064": {
+    "id": "70503569-4ba4-4e80-990b-9494ed80e064",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "HYDMW-0988330",
+    "status": "completed",
+    "startTime": 1761150988330,
+    "endTime": 1761150988573,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761150988567,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "HYDMW-0988330",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761150988566,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761150988567,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "HYDMW-0988330",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761150988567",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "queryLength": 37,
+          "level": "info",
+          "time": 1761150988567,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761150988567,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761150988567",
+          "query": "What crops am i harvesting right now?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "HYDMW-0988330:35b954e3-f9b6-41a2-8712-87a4ab822f4f": {
+    "id": "35b954e3-f9b6-41a2-8712-87a4ab822f4f",
+    "name": "QueryAgent",
+    "parentTraceId": "HYDMW-0988330",
+    "status": "completed",
+    "startTime": 1761150988567,
+    "endTime": 1761150990654,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761150988795,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "HYDMW-0988330",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761150988567",
+          "query": "What crops am i harvesting right now?",
+          "level": "info",
+          "time": 1761150988795,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761150990638,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761150988567",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761150990642,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "HYDMW-0988330",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761150988567",
+          "responseLength": 112,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761150990641,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761150990642,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761150988567",
+          "query": "What crops am i harvesting right now?",
+          "response": "Based on the information provided, you are currently harvesting potatoes from field B and tomatoes from field A.",
+          "sources": [
+            "[0.83] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed...",
+            "[0.82] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed...."
+          ]
+        }
+      }
+    ]
+  },
+  "HYDMW-0988330:57d046c0-b4a5-41e5-aba9-bb8998ed43bd": {
+    "id": "57d046c0-b4a5-41e5-aba9-bb8998ed43bd",
+    "name": "LogToSheets",
+    "parentTraceId": "HYDMW-0988330",
+    "status": "completed",
+    "startTime": 1761150990642,
+    "endTime": 1761150990893,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761150990886,
+        "level": "info",
+        "message": "Logging to CSV",
+        "metadata": {
+          "traceId": "HYDMW-0988330",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761150988567",
+          "queryLength": 37,
+          "responseLength": 112,
+          "level": "info",
+          "time": 1761150990886,
+          "msg": "Logging to CSV"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761150990888,
+        "level": "info",
+        "message": "Successfully logged to CSV",
+        "metadata": {
+          "traceId": "HYDMW-0988330",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761150988567",
+          "level": "info",
+          "time": 1761150990888,
+          "msg": "Successfully logged to CSV"
+        }
+      }
+    ]
+  },
+  "JNWUF-2602773:07f4059b-18e4-4de9-be70-9c844452529d": {
+    "id": "07f4059b-18e4-4de9-be70-9c844452529d",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "JNWUF-2602773",
+    "status": "completed",
+    "startTime": 1761152602774,
+    "endTime": 1761152603039,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152603032,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "JNWUF-2602773",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_alice",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761152603022,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761152603033,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "JNWUF-2602773",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761152603023",
+          "farmId": "farm_1",
+          "userId": "user_alice",
+          "queryLength": 38,
+          "level": "info",
+          "time": 1761152603023,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761152603033,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761152603023",
+          "query": "Which crops had pest damage this week?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "JNWUF-2602773:f441a6de-0a17-45fc-aca5-14541c504910": {
+    "id": "f441a6de-0a17-45fc-aca5-14541c504910",
+    "name": "QueryAgent",
+    "parentTraceId": "JNWUF-2602773",
+    "status": "completed",
+    "startTime": 1761152603033,
+    "endTime": 1761152605244,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152603269,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "JNWUF-2602773",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761152603023",
+          "query": "Which crops had pest damage this week?",
+          "level": "info",
+          "time": 1761152603269,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761152605215,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761152603023",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761152605222,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "JNWUF-2602773",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761152603023",
+          "responseLength": 75,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761152605219,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761152605222,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761152603023",
+          "query": "Which crops had pest damage this week?",
+          "response": "This week, pest damage was observed in the potatoes harvested from field B.",
+          "sources": [
+            "[0.86] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed...",
+            "[0.85] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed...."
+          ]
+        }
+      }
+    ]
+  },
+  "JNWUF-2602773:b100a7d6-53ba-40c1-9010-fba1ed84c2f2": {
+    "id": "b100a7d6-53ba-40c1-9010-fba1ed84c2f2",
+    "name": "LogToSheets",
+    "parentTraceId": "JNWUF-2602773",
+    "status": "completed",
+    "startTime": 1761152605222,
+    "endTime": 1761152605485,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152605479,
+        "level": "info",
+        "message": "Logging to CSV",
+        "metadata": {
+          "traceId": "JNWUF-2602773",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761152603023",
+          "queryLength": 38,
+          "responseLength": 75,
+          "level": "info",
+          "time": 1761152605478,
+          "msg": "Logging to CSV"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761152605481,
+        "level": "info",
+        "message": "Successfully logged to CSV",
+        "metadata": {
+          "traceId": "JNWUF-2602773",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761152603023",
+          "level": "info",
+          "time": 1761152605481,
+          "msg": "Successfully logged to CSV"
+        }
+      }
+    ]
+  },
+  "GVKHG-2642113:755ac358-7886-4587-b248-35eb70db16a8": {
+    "id": "755ac358-7886-4587-b248-35eb70db16a8",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "GVKHG-2642113",
+    "status": "completed",
+    "startTime": 1761152642113,
+    "endTime": 1761152642390,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152642385,
+        "level": "warn",
+        "message": "Authorization failed: Permission denied",
+        "metadata": {
+          "traceId": "GVKHG-2642113",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_dave",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "warn",
+          "time": 1761152642384,
+          "msg": "Authorization failed: Permission denied"
+        }
+      }
+    ]
+  },
+  "C6D7M-2649880:0f3018eb-ee26-490c-833c-7709bb119602": {
+    "id": "0f3018eb-ee26-490c-833c-7709bb119602",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "C6D7M-2649880",
+    "status": "completed",
+    "startTime": 1761152649880,
+    "endTime": 1761152650102,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152650097,
+        "level": "warn",
+        "message": "Authorization failed: Permission denied",
+        "metadata": {
+          "traceId": "C6D7M-2649880",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_bob",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "warn",
+          "time": 1761152650096,
+          "msg": "Authorization failed: Permission denied"
+        }
+      }
+    ]
+  },
+  "4HPVD-2901619:281236ac-b432-47b7-8a28-2e06450d092f": {
+    "id": "281236ac-b432-47b7-8a28-2e06450d092f",
+    "name": "QueryHarvestLogbook",
+    "parentTraceId": "4HPVD-2901619",
+    "status": "completed",
+    "startTime": 1761152901619,
+    "endTime": 1761152901921,
+    "entryPoint": {
+      "type": "api",
+      "stepName": "QueryHarvestLogbook"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152901913,
+        "level": "info",
+        "message": "Authorization successful",
+        "metadata": {
+          "traceId": "4HPVD-2901619",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "userId": "user_bob",
+          "resourceType": "farm",
+          "resourceId": "farm_1",
+          "permission": "query",
+          "level": "info",
+          "time": 1761152901912,
+          "msg": "Authorization successful"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761152901913,
+        "level": "info",
+        "message": "Received query for harvest logbook",
+        "metadata": {
+          "traceId": "4HPVD-2901619",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryHarvestLogbook",
+          "queryId": "query-1761152901913",
+          "farmId": "farm_1",
+          "userId": "user_bob",
+          "queryLength": 18,
+          "level": "info",
+          "time": 1761152901913,
+          "msg": "Received query for harvest logbook"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761152901913,
+        "topic": "query-agent",
+        "success": true,
+        "data": {
+          "entryId": "query-1761152901913",
+          "query": "do i grow carrots?",
+          "conversationHistory": []
+        }
+      }
+    ]
+  },
+  "4HPVD-2901619:011306eb-b3e8-4b78-9cb9-92df23b72bd4": {
+    "id": "011306eb-b3e8-4b78-9cb9-92df23b72bd4",
+    "name": "QueryAgent",
+    "parentTraceId": "4HPVD-2901619",
+    "status": "completed",
+    "startTime": 1761152901913,
+    "endTime": 1761152904329,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "QueryAgent"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152902169,
+        "level": "info",
+        "message": "Querying AI agent",
+        "metadata": {
+          "traceId": "4HPVD-2901619",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761152901913",
+          "query": "do i grow carrots?",
+          "level": "info",
+          "time": 1761152902169,
+          "msg": "Querying AI agent"
+        }
+      },
+      {
+        "type": "state",
+        "timestamp": 1761152904304,
+        "operation": "set",
+        "data": {
+          "traceId": "agent-responses",
+          "key": "query-1761152901913",
+          "value": true
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761152904307,
+        "level": "info",
+        "message": "Agent query completed",
+        "metadata": {
+          "traceId": "4HPVD-2901619",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "QueryAgent",
+          "entryId": "query-1761152901913",
+          "responseLength": 383,
+          "sourcesCount": 2,
+          "level": "info",
+          "time": 1761152904306,
+          "msg": "Agent query completed"
+        }
+      },
+      {
+        "type": "emit",
+        "timestamp": 1761152904307,
+        "topic": "log-to-sheets",
+        "success": true,
+        "data": {
+          "entryId": "query-1761152901913",
+          "query": "do i grow carrots?",
+          "response": "The context provided does not mention anything about growing carrots. If you are considering growing carrots, it's important to assess factors like soil quality, climate conditions, and available resources to determine if it's a suitable crop for your farm. Conduct research or consult with local agricultural experts for personalized advice on growing carrots in your specific area.",
+          "sources": [
+            "[0.78] Harvested 200kg of potatoes from field B. Weather was rainy, and there was some crop damage observed...",
+            "[0.78] Harvested 500kg of tomatoes from field A. Weather was sunny, no pest damage observed...."
+          ]
+        }
+      }
+    ]
+  },
+  "4HPVD-2901619:010a1a87-d603-4962-b362-5900cb430886": {
+    "id": "010a1a87-d603-4962-b362-5900cb430886",
+    "name": "LogToSheets",
+    "parentTraceId": "4HPVD-2901619",
+    "status": "completed",
+    "startTime": 1761152904308,
+    "endTime": 1761152904596,
+    "entryPoint": {
+      "type": "event",
+      "stepName": "LogToSheets"
+    },
+    "events": [
+      {
+        "type": "log",
+        "timestamp": 1761152904585,
+        "level": "info",
+        "message": "Logging to CSV",
+        "metadata": {
+          "traceId": "4HPVD-2901619",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761152901913",
+          "queryLength": 18,
+          "responseLength": 383,
+          "level": "info",
+          "time": 1761152904585,
+          "msg": "Logging to CSV"
+        }
+      },
+      {
+        "type": "log",
+        "timestamp": 1761152904590,
+        "level": "info",
+        "message": "Successfully logged to CSV",
+        "metadata": {
+          "traceId": "4HPVD-2901619",
+          "flows": [
+            "harvest-logbook"
+          ],
+          "step": "LogToSheets",
+          "entryId": "query-1761152901913",
+          "level": "info",
+          "time": 1761152904589,
+          "msg": "Successfully logged to CSV"
+        }
+      }
+    ]
   }
 }

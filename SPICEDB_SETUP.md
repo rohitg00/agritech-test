@@ -1,4 +1,4 @@
-# AuthZed/SpiceDB Authorization Setup
+# SpiceDB/SpiceDB Authorization Setup
 
 This document provides detailed instructions for setting up authorization for the Harvest Logbook RAG system.
 
@@ -13,7 +13,7 @@ This document provides detailed instructions for setting up authorization for th
 
 ## Overview
 
-The Harvest Logbook system uses AuthZed/SpiceDB for fine-grained authorization. This enables:
+The Harvest Logbook system uses SpiceDB/SpiceDB for fine-grained authorization. This enables:
 
 - **Multi-tenant support**: Multiple organizations can use the system
 - **Role-based access control**: Users have different permissions based on their roles
@@ -22,11 +22,11 @@ The Harvest Logbook system uses AuthZed/SpiceDB for fine-grained authorization. 
 
 ## Setup Options
 
-### Option 1: AuthZed Cloud (Recommended for Development)
+### Option 1: AuthZed Cloud (Recommended for Production)
 
 1. **Create Account**
-   - Visit [AuthZed Dashboard](https://app.authzed.com/)
-   - Sign up for a free account
+   - Visit [AuthZed Cloud](https://authzed.com/products/authzed-cloud)
+   - Sign up for an account
 
 2. **Create Permission System**
    - Click "Create Permission System"
@@ -40,8 +40,8 @@ The Harvest Logbook system uses AuthZed/SpiceDB for fine-grained authorization. 
 4. **Configure Environment**
    ```bash
    # Add to .env
-   AUTHZED_ENDPOINT=grpc.authzed.com:443
-   AUTHZED_TOKEN=tc_your_token_here
+   SPICEDB_ENDPOINT=grpc.spicedb.com:443
+   SPICEDB_TOKEN=tc_your_token_here
    ```
 
 ### Option 2: Local SpiceDB (Development/Testing)
@@ -51,21 +51,21 @@ The Harvest Logbook system uses AuthZed/SpiceDB for fine-grained authorization. 
    docker run -d \
      --name spicedb \
      -p 50051:50051 \
-     authzed/spicedb serve \
+     spicedb/spicedb serve \
      --grpc-preshared-key "local_development_key"
    ```
 
 2. **Configure Environment**
    ```bash
    # Add to .env
-   AUTHZED_ENDPOINT=localhost:50051
-   AUTHZED_TOKEN=local_development_key
+   SPICEDB_ENDPOINT=localhost:50051
+   SPICEDB_TOKEN=local_development_key
    ```
 
 ### Option 3: Production SpiceDB
 
 1. **Deploy SpiceDB**
-   - Follow [SpiceDB deployment guide](https://docs.authzed.com/spicedb/installing)
+   - Follow [SpiceDB deployment guide](https://docs.spicedb.com/spicedb/installing)
    - Options: Kubernetes, Docker Compose, Cloud
 
 2. **Configure with Database**
@@ -73,7 +73,7 @@ The Harvest Logbook system uses AuthZed/SpiceDB for fine-grained authorization. 
    docker run -d \
      --name spicedb \
      -p 50051:50051 \
-     authzed/spicedb serve \
+     spicedb/spicedb serve \
      --grpc-preshared-key "production_secure_key" \
      --datastore-engine postgres \
      --datastore-conn-uri "postgres://user:pass@localhost/spicedb"
@@ -82,8 +82,8 @@ The Harvest Logbook system uses AuthZed/SpiceDB for fine-grained authorization. 
 3. **Configure Environment**
    ```bash
    # Add to .env
-   AUTHZED_ENDPOINT=your-spicedb-host:50051
-   AUTHZED_TOKEN=your_secure_production_key
+   SPICEDB_ENDPOINT=your-spicedb-host:50051
+   SPICEDB_TOKEN=your_secure_production_key
    ```
 
 ## Authorization Schema
@@ -180,12 +180,12 @@ This creates:
 #### TypeScript/Node.js
 
 ```typescript
-import { getAuthZedService } from './src/services/harvest-logbook/authzed-service';
+import { getSpiceDBService } from './src/services/harvest-logbook/spicedb-service';
 
-const authzed = getAuthZedService();
+const spicedb = getSpiceDBService();
 
 // Make user an admin of organization
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'user',
   subjectId: 'user_bob',
   relation: 'admin',
@@ -194,7 +194,7 @@ await authzed.createRelationship({
 });
 
 // Make user a viewer of farm
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'user',
   subjectId: 'user_charlie',
   relation: 'viewer',
@@ -203,7 +203,7 @@ await authzed.createRelationship({
 });
 
 // Link farm to organization
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'organization',
   subjectId: 'org_1',
   relation: 'organization',
@@ -215,7 +215,7 @@ await authzed.createRelationship({
 #### Check Permissions
 
 ```typescript
-const canEdit = await authzed.checkPermission({
+const canEdit = await spicedb.checkPermission({
   userId: 'user_bob',
   resourceType: 'farm',
   resourceId: 'farm_1',
@@ -228,7 +228,7 @@ console.log(`Can edit: ${canEdit}`);
 #### List Accessible Resources
 
 ```typescript
-const farmIds = await authzed.lookupResources(
+const farmIds = await spicedb.lookupResources(
   'user_bob',
   'farm',
   'edit'
@@ -274,7 +274,7 @@ console.log('Farms user_bob can edit:', farmIds);
 
 ```typescript
 // Make user org admin
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'user',
   subjectId: 'admin_user',
   relation: 'admin',
@@ -283,7 +283,7 @@ await authzed.createRelationship({
 });
 
 // Link farm to org
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'organization',
   subjectId: 'org_1',
   relation: 'organization',
@@ -298,7 +298,7 @@ await authzed.createRelationship({
 
 ```typescript
 // Make user editor
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'user',
   subjectId: 'editor_user',
   relation: 'editor',
@@ -307,7 +307,7 @@ await authzed.createRelationship({
 });
 
 // Can edit
-await authzed.checkPermission({
+await spicedb.checkPermission({
   userId: 'editor_user',
   resourceType: 'farm',
   resourceId: 'farm_1',
@@ -315,7 +315,7 @@ await authzed.checkPermission({
 }); // true
 
 // Cannot manage
-await authzed.checkPermission({
+await spicedb.checkPermission({
   userId: 'editor_user',
   resourceType: 'farm',
   resourceId: 'farm_1',
@@ -327,7 +327,7 @@ await authzed.checkPermission({
 
 ```typescript
 // Make user viewer
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'user',
   subjectId: 'viewer_user',
   relation: 'viewer',
@@ -336,7 +336,7 @@ await authzed.createRelationship({
 });
 
 // Can view and query
-await authzed.checkPermission({
+await spicedb.checkPermission({
   userId: 'viewer_user',
   resourceType: 'farm',
   resourceId: 'farm_1',
@@ -344,7 +344,7 @@ await authzed.checkPermission({
 }); // true
 
 // Cannot edit
-await authzed.checkPermission({
+await spicedb.checkPermission({
   userId: 'viewer_user',
   resourceType: 'farm',
   resourceId: 'farm_1',
@@ -356,11 +356,11 @@ await authzed.checkPermission({
 
 ### Connection Errors
 
-**Error**: `Failed to connect to AuthZed/SpiceDB`
+**Error**: `Failed to connect to SpiceDB/SpiceDB`
 
 **Solutions**:
-1. Check `AUTHZED_ENDPOINT` is correct
-2. Verify `AUTHZED_TOKEN` is set
+1. Check `SPICEDB_ENDPOINT` is correct
+2. Verify `SPICEDB_TOKEN` is set
 3. Ensure SpiceDB is running (if local)
 4. Check firewall/network settings
 
@@ -380,7 +380,7 @@ await authzed.checkPermission({
 **Solutions**:
 1. Verify user has required permission:
    ```typescript
-   const hasPermission = await authzed.checkPermission({
+   const hasPermission = await spicedb.checkPermission({
      userId: 'user_id',
      resourceType: 'farm',
      resourceId: 'farm_id',
@@ -389,7 +389,7 @@ await authzed.checkPermission({
    ```
 2. Check relationship exists:
    ```typescript
-   const farms = await authzed.lookupResources('user_id', 'farm', 'edit');
+   const farms = await spicedb.lookupResources('user_id', 'farm', 'edit');
    ```
 3. Verify farm is linked to organization (if using org permissions)
 
@@ -408,7 +408,7 @@ await authzed.checkPermission({
 Link farms to organizations for easier permission management:
 
 ```typescript
-await authzed.createRelationship({
+await spicedb.createRelationship({
   subjectType: 'organization',
   subjectId: 'org_1',
   relation: 'organization',
@@ -431,7 +431,7 @@ List all permissions for a resource:
 
 ```typescript
 // Get all users with edit access to farm
-const editors = await authzed.lookupResources('farm_1', 'user', 'edit');
+const editors = await spicedb.lookupResources('farm_1', 'user', 'edit');
 ```
 
 ### 4. Test Before Production
@@ -457,10 +457,10 @@ Use descriptive, human-readable IDs:
 
 ## Additional Resources
 
-- [AuthZed Documentation](https://docs.authzed.com/)
-- [SpiceDB GitHub](https://github.com/authzed/spicedb)
-- [Permission Systems Playground](https://play.authzed.com/)
-- [AuthZed Blog](https://authzed.com/blog)
+- [SpiceDB Documentation](https://docs.spicedb.com/)
+- [SpiceDB GitHub](https://github.com/spicedb/spicedb)
+- [Permission Systems Playground](https://play.spicedb.com/)
+- [SpiceDB Blog](https://spicedb.com/blog)
 
 ---
 

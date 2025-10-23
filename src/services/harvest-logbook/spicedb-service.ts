@@ -1,11 +1,11 @@
 /**
- * AuthZed Service for Harvest Logbook
+ * SpiceDB Service for Harvest Logbook
  * Handles all authorization checks using SpiceDB
  */
 
 import { v1 } from '@authzed/authzed-node';
 
-export interface AuthZedConfig {
+export interface SpiceDBConfig {
   endpoint: string;
   token: string;
 }
@@ -25,31 +25,37 @@ export interface CreateRelationshipParams {
   resourceId: string;
 }
 
-export class AuthZedService {
-  private client: ReturnType<typeof v1.NewClient>;
-  private static instance: AuthZedService;
+export class SpiceDBService {
+  private client: ReturnType<typeof v1.NewClient>['promises'];
+  private static instance: SpiceDBService;
 
-  private constructor(config: AuthZedConfig) {
-    this.client = v1.NewClient(config.token, config.endpoint, v1.ClientSecurity.SECURE);
+  private constructor(config: SpiceDBConfig) {
+    // Use insecure connection for localhost, secure for remote endpoints
+    const security = config.endpoint.startsWith('localhost:') || config.endpoint.startsWith('127.0.0.1:')
+      ? v1.ClientSecurity.INSECURE_LOCALHOST_ALLOWED
+      : v1.ClientSecurity.SECURE;
+
+    const clientWithCallbacks = v1.NewClient(config.token, config.endpoint, security);
+    this.client = clientWithCallbacks.promises;
   }
 
   /**
-   * Get singleton instance of AuthZedService
+   * Get singleton instance of SpiceDBService
    */
-  static getInstance(): AuthZedService {
-    if (!AuthZedService.instance) {
-      const config: AuthZedConfig = {
-        endpoint: process.env.AUTHZED_ENDPOINT || 'grpc.authzed.com:443',
-        token: process.env.AUTHZED_TOKEN || '',
+  static getInstance(): SpiceDBService {
+    if (!SpiceDBService.instance) {
+      const config: SpiceDBConfig = {
+        endpoint: process.env.SPICEDB_ENDPOINT || process.env.AUTHZED_ENDPOINT || 'grpc.authzed.com:443',
+        token: process.env.SPICEDB_TOKEN || process.env.AUTHZED_TOKEN || '',
       };
 
       if (!config.token) {
-        throw new Error('AUTHZED_TOKEN environment variable is required');
+        throw new Error('SPICEDB_TOKEN (or AUTHZED_TOKEN) environment variable is required');
       }
 
-      AuthZedService.instance = new AuthZedService(config);
+      SpiceDBService.instance = new SpiceDBService(config);
     }
-    return AuthZedService.instance;
+    return SpiceDBService.instance;
   }
 
   /**
@@ -77,8 +83,8 @@ export class AuthZedService {
         }),
       });
 
-      const response = await this.client.checkPermission(request, {});
-      
+      const response = await this.client.checkPermission(request);
+
       return (response as any).permissionship === v1.CheckPermissionResponse_Permissionship.HAS_PERMISSION;
     } catch (error) {
       console.error('AuthZed permission check failed:', error);
@@ -112,7 +118,7 @@ export class AuthZedService {
         ],
       });
 
-      await this.client.writeRelationships(request, {});
+      await this.client.writeRelationships(request);
     } catch (error) {
       console.error('AuthZed relationship creation failed:', error);
       throw new Error('Failed to create authorization relationship');
@@ -145,7 +151,7 @@ export class AuthZedService {
         ],
       });
 
-      await this.client.writeRelationships(request, {});
+      await this.client.writeRelationships(request);
     } catch (error) {
       console.error('AuthZed relationship deletion failed:', error);
       throw new Error('Failed to delete authorization relationship');
@@ -179,8 +185,8 @@ export class AuthZedService {
       });
 
       const resourceIds: string[] = [];
-      
-      for await (const response of this.client.lookupResources(request, {}) as any) {
+
+      for await (const response of this.client.lookupResources(request) as any) {
         if (response.resourceObjectId) {
           resourceIds.push(response.resourceObjectId);
         }
@@ -199,11 +205,8 @@ export class AuthZedService {
    */
   async writeSchema(schema: string): Promise<void> {
     try {
-      const request = v1.WriteSchemaRequest.create({
-        schema: schema,
-      });
-
-      await this.client.writeSchema(request, {});
+      const request = v1.WriteSchemaRequest.create({ schema });
+      await this.client.writeSchema(request);
     } catch (error) {
       console.error('AuthZed schema write failed:', error);
       throw new Error('Failed to write authorization schema');
@@ -216,7 +219,7 @@ export class AuthZedService {
   async readSchema(): Promise<string> {
     try {
       const request = v1.ReadSchemaRequest.create({});
-      const response = await this.client.readSchema(request, {});
+      const response = await this.client.readSchema(request);
       return (response as any).schemaText;
     } catch (error) {
       console.error('AuthZed schema read failed:', error);
@@ -226,8 +229,13 @@ export class AuthZedService {
 }
 
 /**
- * Get singleton instance of AuthZedService
+ * Get singleton instance of SpiceDBService
  */
-export function getAuthZedService(): AuthZedService {
-  return AuthZedService.getInstance();
+export function getSpiceDBService(): SpiceDBService {
+  return SpiceDBService.getInstance();
 }
+
+// Legacy export for backwards compatibility
+export const getAuthZedService = getSpiceDBService;
+export type AuthZedService = SpiceDBService;
+export type AuthZedConfig = SpiceDBConfig;
